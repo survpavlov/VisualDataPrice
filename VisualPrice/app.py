@@ -5,10 +5,6 @@ from dash.dependencies import Input, Output
 import plotly.graph_objs as go
 from data import get_data_ticker
 
-T = 0
-L = []
-N = []
-
 app = dash.Dash(__name__)
 
 opts = [{'label': 'ticker_' + f'{i:02}', 'value': i} for i in range(100)]
@@ -43,15 +39,9 @@ app.layout = html.Div(children = [
                Input('graph-update', 'n_intervals')
               ]
 )
-def update_graph(value, n_intervals):
-    global T, L, N
-    if value != T:
-      T = value
-      L = []
-      N = []
-    m = get_data_ticker(T, len(N))
-    L.extend(m)
-    N.extend(range(len(N), len(N) + len(m)))
+def update_graph(value, n_intervals):    
+    L = get_data_ticker(value, 0)
+    N = list(range(len(L)))
     fig = go.Figure(data = [go.Scatter(x = N, y = L)])
     return fig
 
